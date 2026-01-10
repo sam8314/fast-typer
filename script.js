@@ -1,0 +1,1 @@
+console.log("Fast-Typer script loaded.");
