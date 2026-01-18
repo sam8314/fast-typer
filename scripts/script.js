@@ -35,64 +35,48 @@ function getModeJeu() {
     }
 }
 
-function logiqueJeu(i, nbMotsProposes, score) {
-    console.log("user typed valider");
-    i++;
-    console.log('i=', i);
-    console.log('mot à taper =', wordsAppList[i]);
-    console.log('phrase à taper =', sentencesAppList[i]); 
-
+function logiqueJeu() {
     let mode = getModeJeu();
-    console.log('mode de jeu =', mode);
+    let texteSaisi = document.getElementById("inputEcriture").value;
+    let target = (mode === "mots"? wordsAppList[i] : sentencesAppList[i]);
 
-    let target = (mode === "mots"? wordsAppList[i-1] : sentencesAppList[i-1]);
-    if (target===undefined) {
-        console.log("Fin du jeu");
+    console.log("user typed valider");
+    console.log('i=', i, "saisi=", texteSaisi, "target=", target);
+
+    if (target === undefined) {
         afficherProposition("Fin du jeu");
+        return;
     }
 
-    if (mode === "mots") {
-        afficherProposition(wordsAppList[i]);
-    } else if (mode === "phrases") {
-        afficherProposition(sentencesAppList[i]);
-    }
-    
-    nbMotsProposes++;
-
-    let motSaisi = document.getElementById("inputEcriture").value;
-
-    if (motSaisi === (target)) {
+    if (texteSaisi === (target)) {
         score++;
         console.log("Score augmenté ! Nouveau score :", score);
     } else {
         console.log("Mot incorrect. Score inchangé :", score);
     }
+
+    nbMotsProposes++;
     afficherResultat(score, nbMotsProposes);
 
     clearZoneSaisie();
+    i++;
+    
+    let nextTarget = (mode === "mots" ? wordsAppList[i] : sentencesAppList[i]);
+    if (nextTarget !== undefined) {
+        afficherProposition(nextTarget);
+    } else {
+        afficherProposition("Fin du jeu");
+    }  
 }
 
+let score = 0
+let nbMotsProposes = 0
+let i = 0;
+
 function lancerJeu() {
-    let score = 0
-    let nbMotsProposes = 0
-    let i = 0;
-    let targetList = wordsAppList; // by default
-
-    /**
-    let btnModeMots = document.getElementById("mots")
-    btnModeMots.addEventListener("click", function() {
-        console.log("mode mots sélectionné");
-        afficherProposition(wordsAppList[i]);
-    });
-
-    let btnModePhrases = document.getElementById("phrases")
-    btnModePhrases.addEventListener("click", function() {
-        console.log("mode phrases sélectionné");
-        afficherProposition(sentencesAppList[i]);
-    });
-    */
 
     let btnModeList = document.querySelectorAll(".optionSource input");
+    let btnValiderMot = document.getElementById("btnValiderMot");
 
     for (let j = 0; j < btnModeList.length; j++) {
     btnModeList[j].addEventListener("change", function() {
@@ -104,16 +88,12 @@ function lancerJeu() {
             afficherProposition(sentencesAppList[i]);
         }
     })};
-
-    let btnValiderMot = document.getElementById("btnValiderMot")
-    btnValiderMot.addEventListener("click", function() {
-        logiqueJeu(i, nbMotsProposes, score);
-    });
+    
+    btnValiderMot.addEventListener("click", logiqueJeu);
 
     document.addEventListener('keydown', function(event) {
-    if (event.key === "Enter") {
-        logiqueJeu(i, nbMotsProposes, score);
-    }
+        if (event.key === "Enter") {
+            logiqueJeu();
+        }
     });
-    
 }
