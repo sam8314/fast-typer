@@ -35,6 +35,17 @@ function getModeJeu() {
     }
 }
 
+/**
+ * Cette fonction construit et affiche l'email. 
+ * @param {string} nom : le nom du joueur
+ * @param {string} email : l'email de la personne avec qui il veut partager son score
+ * @param {string} score : le score. 
+ */
+function afficherEmail(nom, email, score) {
+    let mailto = `mailto:${email}?subject=Partage du score Azertype&body=Salut, je suis ${nom} et je viens de réaliser le score ${score} sur le site d'Azertype !`
+    location.href = mailto
+}
+
 function logiqueJeu() {
     let mode = getModeJeu();
     let texteSaisi = document.getElementById("inputEcriture").value;
@@ -75,8 +86,10 @@ let i = 0;
 
 function lancerJeu() {
 
+    initAddEventListenerPopup();
     let btnModeList = document.querySelectorAll(".optionSource input");
     let btnValiderMot = document.getElementById("btnValiderMot");
+    const form = document.querySelector('form');
 
     for (let j = 0; j < btnModeList.length; j++) {
     btnModeList[j].addEventListener("change", function() {
@@ -96,4 +109,14 @@ function lancerJeu() {
             logiqueJeu();
         }
     });
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        console.log("Il n’y a pas eu de rechargement de page");
+        const nom = document.getElementById("nom").value;
+        const email = document.getElementById("email").value;
+        console.log(nom);
+        console.log(email);
+        afficherEmail(nom, email, `${score} / ${nbMotsProposes}`);
+});
 }

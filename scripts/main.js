@@ -1,3 +1,4 @@
+cacherPopup();
 lancerJeu();
 
 
